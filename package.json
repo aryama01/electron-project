@@ -1,0 +1,22 @@
+{
+  "name": "my-electron-app",
+  "version": "1.0.0",
+  "description": "Employee Monitoring App",
+  "main": "main.js",
+  "author": "Your Name",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^40.3.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.yourcompany.monitoringapp",
+    "productName": "WorkMonitor",
+    "win": {
+      "target": "nsis"
+    }
+  }
+}

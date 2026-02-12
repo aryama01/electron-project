@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Portal Login</title>
+    <style>
+        /* Importing a clean, modern font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            /* Tech-Focused Blue Background Image */
+            background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Overlay to ensure text readability and add a blue tint */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Dark blue gradient overlay */
+            background: linear-gradient(135deg, rgba(0, 30, 80, 0.85), rgba(0, 80, 150, 0.6));
+            z-index: -1;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95); /* Solid white for professional contrast */
+            padding: 45px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            max-width: 400px;
+            border-top: 5px solid #0056b3; /* Blue accent strip at top */
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: translateY(-3px);
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #0d253f;
+            font-weight: 700;
+            font-size: 26px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 35px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #eef2f7;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        /* Professional Tech Blue Focus */
+        .form-group input:focus {
+            border-color: #0066cc;
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+            outline: none;
+            background-color: #fff;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, #004e92, #0066cc);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #003d73, #0056b3);
+            box-shadow: 0 6px 15px rgba(0, 78, 146, 0.4);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        #error-message {
+            color: #c53030;
+            background-color: #fff5f5;
+            text-align: center;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            display: none;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid #feb2b2;
+        }
+
+        /* Decorative Circle for Professional Look */
+        .decor-circle {
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 102, 204, 0.05);
+            border-radius: 50%;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <div class="decor-circle"></div>
+    <h2>Secure Access</h2>
+    <p class="subtitle">Enter your credentials to continue</p>
+
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit">Sign In</button>
+        <div id="error-message">Invalid credentials. Please try again.</div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const errorMsg = document.getElementById('error-message');
+
+        // ---------------------------------------------------------
+        // LOGIC SECTION
+        // ---------------------------------------------------------
+
+        // OPTION 1: REAL BACKEND REQUEST (Uncomment to use)
+        /*
+        fetch('http://your-api-endpoint.com/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success === true) {
+                window.location.href = "http://localhost:8080";
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            errorMsg.textContent = "Connection error";
+            errorMsg.style.display = 'block';
+        });
+        */
+
+        // OPTION 2: MOCK REQUEST (Current Active Logic)
+        // Use admin / password to login successfully
+        const isLoginSuccessfulMng = (username === 'mng' && password === 'password');
+        const isLoginSuccessfulEmp = (username === 'emp' && password === 'password');
+        const isLoginSuccessful = isLoginSuccessfulMng || isLoginSuccessfulEmp;
+
+        if (isLoginSuccessfulMng) {
+            window.location.href = "http://localhost:8080";
+        }
+        else if(isLoginSuccessfulEmp){
+            window.location.href = "employee.html";
+
+        }
+            else {
+            errorMsg.style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>
