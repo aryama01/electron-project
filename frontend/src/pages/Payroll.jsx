@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import {
@@ -17,63 +17,7 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { Search, Download, FileText, DollarSign } from "lucide-react";
-
-const payrollData = [
-  {
-    id: 1,
-    name: "Rahul Kumar",
-    month: "January 2024",
-    basic: 50000,
-    bonus: 5000,
-    deductions: 3000,
-    netPay: 52000,
-  },
-  {
-    id: 2,
-    name: "Priya Sharma",
-    month: "January 2024",
-    basic: 45000,
-    bonus: 3000,
-    deductions: 2500,
-    netPay: 45500,
-  },
-  {
-    id: 3,
-    name: "Amit Singh",
-    month: "January 2024",
-    basic: 55000,
-    bonus: 7000,
-    deductions: 4000,
-    netPay: 58000,
-  },
-  {
-    id: 4,
-    name: "Sneha Patel",
-    month: "January 2024",
-    basic: 48000,
-    bonus: 4000,
-    deductions: 2800,
-    netPay: 49200,
-  },
-  {
-    id: 5,
-    name: "Karan Mehta",
-    month: "January 2024",
-    basic: 60000,
-    bonus: 8000,
-    deductions: 5000,
-    netPay: 63000,
-  },
-  {
-    id: 6,
-    name: "Ravi Verma",
-    month: "January 2024",
-    basic: 52000,
-    bonus: 4500,
-    deductions: 3200,
-    netPay: 53300,
-  },
-];
+import apiClient from "../utils/apiclients";
 
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat("en-IN", {
@@ -84,14 +28,30 @@ const formatCurrency = (amount) => {
 };
 
 export default function Payroll() {
+  const [payrollData, setPayrollData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMonth, setSelectedMonth] = useState("january-2024");
 
-  const filteredPayroll = payrollData.filter((emp) =>
-    emp.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // Fetch data from the dummy API
+  useEffect(() => {
+    const fetchPayroll = async () => {
+      const data = await apiClient.get("/payroll");
+      setPayrollData(data);
+    };
+    fetchPayroll();
+  }, []);
+
+  const filteredPayroll = payrollData.filter(
+    (emp) =>
+      emp.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      emp.month.toLowerCase() === selectedMonth.replace("-", " ")
   );
 
   const totalPayroll = filteredPayroll.reduce((sum, emp) => sum + emp.netPay, 0);
+  const totalBonus = filteredPayroll.reduce((sum, emp) => sum + emp.bonus, 0);
+  const totalDeductions = filteredPayroll.reduce((sum, emp) => sum + emp.deductions, 0);
+  const totalPayslips = filteredPayroll.length;
+
 
   return (
     <div className="animate-fade-in">

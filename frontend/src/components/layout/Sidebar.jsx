@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -18,30 +18,40 @@ const navGroups = [
   {
     label: null,
     items: [
-      { icon: LayoutDashboard, label: "Dashboard", path: "/" },
+      { icon: LayoutDashboard, label: "Dashboard", path: "/app" },
     ],
   },
   {
     label: "Work Management",
     items: [
-      { icon: ClipboardList, label: "Tasks", path: "/tasks" },
-      { icon: ClipboardList, label: "Worksheet", path: "/worksheet" },
-      { icon: Users, label: "Teams", path: "/teams" },
-      { icon: Activity, label: "Monitoring", path: "/monitoring" },
+      { icon: ClipboardList, label: "Tasks", path: "/app/tasks" },
+      { icon: ClipboardList, label: "Worksheet", path: "/app/worksheet" },
+      { icon: Users, label: "Teams", path: "/app/teams" },
+      { icon: Activity, label: "Monitoring", path: "/app/monitoring" },
     ],
   },
   {
     label: "HR & Finance",
     items: [
-      { icon: Wallet, label: "Payroll", path: "/payroll" },
-      { icon: Mail, label: "Mail Center", path: "/mail" },
-      { icon: Settings, label: "Settings", path: "/settings" },
+      { icon: Wallet, label: "Payroll", path: "/app/payroll" },
+      { icon: Mail, label: "Mail Center", path: "/app/mail" },
+      { icon: Settings, label: "Settings", path: "/app/settings" },
     ],
   },
 ];
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear any stored auth data if needed
+    localStorage.removeItem("manager:checkedIn");
+    localStorage.removeItem("manager:lastCheckIn");
+    localStorage.removeItem("manager:lastCheckOut");
+    // Navigate to login (root)
+    navigate("/");
+  };
 
   return (
       <aside
@@ -99,7 +109,10 @@ export function Sidebar() {
 
         {/* Logout */}
         <div className="p-3 border-t border-sidebar-border">
-          <button className="sidebar-item w-full flex items-center gap-3 text-destructive hover:text-destructive">
+          <button 
+            onClick={handleLogout}
+            className="sidebar-item w-full flex items-center gap-3 text-destructive hover:text-destructive"
+          >
             <LogOut size={20} />
             {!collapsed && <span>Logout</span>}
           </button>

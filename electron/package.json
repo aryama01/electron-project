@@ -18,5 +18,9 @@
     "win": {
       "target": "nsis"
     }
+  },
+  "dependencies": {
+    "npm": "^11.10.0",
+    "start": "^5.1.0"
   }
 }
