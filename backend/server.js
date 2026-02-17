@@ -1,16 +1,23 @@
 const express = require("express");
 const cors = require("cors");
 
+<<<<<<< HEAD
 const payrollRoutes = require("./routes/payroll.routes");
 const authRoutes = require("./routes/authRoutes");
 const authMiddleware = require("./middleware/authMiddleware");
 
 const app = express();
 const PORT = 5000;
+=======
+const managerRoutes = require("./routes/manager.routes");
+
+const app = express();
+>>>>>>> main
 
 app.use(cors());
 app.use(express.json());
 
+<<<<<<< HEAD
 // 🔍 Simple request logger (for debugging)
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.originalUrl}`);
@@ -43,3 +50,12 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
 });
+=======
+app.use("/api/managers", managerRoutes);
+
+const PORT = 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
+>>>>>>> main

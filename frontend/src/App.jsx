@@ -2,7 +2,7 @@ import { Toaster } from "./components/ui/toaster";
 import { Toaster as Sooner } from "./components/ui/sonner";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
+import { create RouterProvider, Navigate } from "react-router-dom";
 
 import { MainLayout } from "./components/layout/MainLayout";
 import Login from "./pages/login";
@@ -42,15 +42,29 @@ const App = () => {
     { future: { v7_startTransition: true, v7_relativeSplatPath: true } }
   );
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        {/* Toast notifications */}
-        <Toaster />
-        <Sooner />
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          {/* Toast notifications */}
+          <Toaster />
+          <Sooner />
 
-        <RouterProvider router={router} />
-      </TooltipProvider>
-    </QueryClientProvider>
+          <BrowserRouter>
+            <MainLayout>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/teams" element={<Teams />} />
+                <Route path="/tasks" element={<Tasks />} />
+                <Route path="/monitoring" element={<WorkMonitoring />} />
+                <Route path="/payroll" element={<Payroll />} />
+                <Route path="/mail" element={<MailCenter />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="*" element={<NotFound />} />
+                <Route path="/worksheet" element={<Worksheet />} />
+              </Routes>
+            </MainLayout>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
   );
 };
 
