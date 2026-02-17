@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -25,19 +25,101 @@ import { format } from "date-fns";
 import { cn } from "../lib/utils";
 import { StatusBadge } from "../components/ui/status-badge";
 
-const initialTasks = [
-  { id: "T101", employee: "Rahul", team: "Dev", assignedOn: "01 Feb", deadline: "05 Feb", status: "completed", completedOn: "04 Feb" },
-  { id: "T102", employee: "Priya", team: "QA", assignedOn: "02 Feb", deadline: "07 Feb", status: "pending", completedOn: "-" },
-  { id: "T103", employee: "Amit", team: "Design", assignedOn: "03 Feb", deadline: "04 Feb", status: "overdue", completedOn: "-" },
-  { id: "T104", employee: "Sneha", team: "Dev", assignedOn: "03 Feb", deadline: "10 Feb", status: "active", completedOn: "-" },
-  { id: "T105", employee: "Karan", team: "Backend", assignedOn: "04 Feb", deadline: "08 Feb", status: "pending", completedOn: "-" },
-];
+const BASE_URL = "http://localhost:5000";
 
 export default function Tasks() {
-  const [tasks, setTasks] = useState(initialTasks);
+
+  const [tasks, setTasks] = useState([]);
   const [date, setDate] = useState();
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [formData, setFormData] = useState({
+    title: "",
+    employee: "",
+    team: "",
+    priority: "",
+    description: "",
+  });
+
+  // ✅ FETCH TASKS FROM BACKEND
+  const fetchTasks = async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/api/tasks`);
+      const data = await res.json();
+
+      // Convert backend format → your UI format
+      const formattedTasks = data.map(task => ({
+        id: task.taskId,
+        employee: task.employee,
+        team: task.team || "-",
+        assignedOn: task.assignedOn
+          ? format(new Date(task.assignedOn), "dd MMM")
+          : "-",
+        deadline: task.deadline
+          ? format(new Date(task.deadline), "dd MMM")
+          : "-",
+        status: task.status?.toLowerCase() || "pending",
+        completedOn: task.completedOn
+          ? format(new Date(task.completedOn), "dd MMM")
+          : "-"
+      }));
+
+      setTasks(formattedTasks);
+
+    } catch (err) {
+      console.error("Failed to fetch tasks", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  // Handle form change
+  const handleChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
+  };
+
+  // ✅ HANDLE SUBMIT (Backend Connected)
+  const handleSubmit = async () => {
+    if (!formData.title || !formData.employee || !formData.priority || !date) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    try {
+      await fetch(`${BASE_URL}/api/tasks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          ...formData,
+          deadline: date,
+          status: "Pending"
+        })
+      });
+
+      // Refresh tasks
+      fetchTasks();
+
+      // Reset form
+      setFormData({
+        title: "",
+        employee: "",
+        team: "",
+        priority: "",
+        description: ""
+      });
+
+      setDate(null);
+
+    } catch (err) {
+      console.error("Error saving task", err);
+    }
+  };
+
+  // Search filter
   const filteredTasks = tasks.filter(
     (task) =>
       task.employee.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -55,38 +137,43 @@ export default function Tasks() {
       {/* Task Assignment Form */}
       <div className="form-section mb-8">
         <h2 className="text-lg font-semibold mb-6">Assign New Task</h2>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="title">Task Title</Label>
-            <Input id="title" placeholder="Enter task title" />
+            <Label>Task Title</Label>
+            <Input
+              value={formData.title}
+              onChange={(e) => handleChange("title", e.target.value)}
+              placeholder="Enter task title"
+            />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="assignee">Assign To</Label>
-            <Select>
+            <Label>Assign To</Label>
+            <Select onValueChange={(value) => handleChange("employee", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select employee or team" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="rahul">Rahul - Dev Team</SelectItem>
-                <SelectItem value="priya">Priya - QA Team</SelectItem>
-                <SelectItem value="amit">Amit - Design Team</SelectItem>
-                <SelectItem value="sneha">Sneha - Dev Team</SelectItem>
-                <SelectItem value="karan">Karan - Backend Team</SelectItem>
+                <SelectItem value="Rahul">Rahul - Dev Team</SelectItem>
+                <SelectItem value="Priya">Priya - QA Team</SelectItem>
+                <SelectItem value="Amit">Amit - Design Team</SelectItem>
+                <SelectItem value="Sneha">Sneha - Dev Team</SelectItem>
+                <SelectItem value="Karan">Karan - Backend Team</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="priority">Priority</Label>
-            <Select>
+            <Label>Priority</Label>
+            <Select onValueChange={(value) => handleChange("priority", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select priority" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="low">Low</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="high">High</SelectItem>
+                <SelectItem value="Low">Low</SelectItem>
+                <SelectItem value="Medium">Medium</SelectItem>
+                <SelectItem value="High">High</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -119,13 +206,17 @@ export default function Tasks() {
           </div>
 
           <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea id="description" placeholder="Enter task description" rows={3} />
+            <Label>Description</Label>
+            <Textarea
+              value={formData.description}
+              onChange={(e) => handleChange("description", e.target.value)}
+              rows={3}
+            />
           </div>
         </div>
 
         <div className="mt-6">
-          <Button className="gap-2">
+          <Button className="gap-2" onClick={handleSubmit}>
             <Plus size={16} />
             Assign Task
           </Button>
