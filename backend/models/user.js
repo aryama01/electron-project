@@ -6,7 +6,7 @@ class Manager {
                     phone,
                     department,
                     designation,
-                    employeeId
+                    employeeId, status
                 }) {
         this.id = Date.now().toString(); // temporary unique id
         this.firstName = firstName;
@@ -17,6 +17,8 @@ class Manager {
         this.designation = designation;
         this.employeeId = employeeId;
         this.createdAt = new Date();
+        this.status = status || "active"; // default status
+
     }
 }
 

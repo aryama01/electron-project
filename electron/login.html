@@ -38,7 +38,7 @@
             z-index: -1;
         }
 
-        .login-container {
+        .loginController-container {
             background: rgba(255, 255, 255, 0.95); /* Solid white for professional contrast */
             padding: 45px;
             border-radius: 12px;
@@ -51,11 +51,11 @@
             transition: transform 0.3s ease;
         }
 
-        .login-container:hover {
+        .loginController-container:hover {
             transform: translateY(-3px);
         }
 
-        .login-container h2 {
+        .loginController-container h2 {
             text-align: center;
             margin-bottom: 10px;
             color: #0d253f;
@@ -156,7 +156,7 @@
 </head>
 <body>
 
-<div class="login-container">
+<div class="loginController-container">
     <div class="decor-circle"></div>
     <h2>Secure Access</h2>
     <p class="subtitle">Enter your credentials to continue</p>
@@ -176,49 +176,25 @@
 </div>
 
 <script>
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
+    document.getElementById('loginForm').addEventListener('submit', async function (event) {
         event.preventDefault();
 
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
         const errorMsg = document.getElementById('error-message');
 
-        // ---------------------------------------------------------
-        // LOGIC SECTION
-        // ---------------------------------------------------------
+        try {
+            const res = await window.electronAPI.loginController({username, password});
 
-        // OPTION 1: REAL BACKEND REQUEST (Uncomment to use)
-        /*
-        fetch('http://your-api-endpoint.com/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success === true) {
-                window.location.href = "http://localhost:8080";
-            } else {
-                errorMsg.style.display = 'block';
+            if (!res.success) {
+                errorMsg.style.display = "block";
             }
-        })
-        .catch(error => {
-            errorMsg.textContent = "Connection error";
-            errorMsg.style.display = 'block';
-        });
-        */
-
-        // OPTION 2: MOCK REQUEST (Current Active Logic)
-        // Use admin / password to login successfully
-        const isLoginSuccessfulMng = (username === 'mng' && password === 'password');
-        const isLoginSuccessfulEmp = (username === 'emp' && password === 'password');
-        const isLoginSuccessful = isLoginSuccessfulMng || isLoginSuccessfulEmp;
-
-        if (isLoginSuccessful) {
-            window.electronAPI.sendLogin({ username, password });
-        } else {
-            errorMsg.style.display = 'block';
+        } catch (err) {
+            errorMsg.textContent = "Login failed. Please try again.";
+            errorMsg.style.display = "block";
+            console.error(err);
         }
+
 
     });
 </script>

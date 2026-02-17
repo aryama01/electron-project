@@ -1,10 +1,14 @@
-const { app, BrowserWindow,ipcMain } = require('electron');
-const path = require('path');
+// main.js
+const { app, BrowserWindow, ipcMain } = require("electron");
+const path = require("path");
+const axios = require("axios");
+
 
 let mainWindow;
+let authSession = null; // 🔐 Secure in-memory session
 
-function createWindow() {
-    mainWindow = new BrowserWindow({
+async function createWindow() {
+        mainWindow = new BrowserWindow({
         width: 1280,
         height: 900,
         minWidth: 1000,
@@ -12,40 +16,63 @@ function createWindow() {
         autoHideMenuBar: true,
         backgroundColor: "#f4f6f9",
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
+            preload: path.join(__dirname, "preload.js"),
             contextIsolation: true,
             nodeIntegration: false
         }
     });
 
     mainWindow.maximize();
+    mainWindow.webContents.openDevTools();
 
-
-    // Load the login page first
-    mainWindow.loadFile('login.html');
+    mainWindow.loadFile("login.html");
 }
-ipcMain.on("login", (event, data) => {
 
-    const { username, password } = data;
+ipcMain.handle("login", async (event, credentials) => {
+    try {
+        const res = await axios.post("http://localhost:5000/api/auth/login", {
+            username: credentials.username,
+            password: credentials.password
+        });
+        console.log(res);
 
-    if (username === "mng" && password === "password") {
-        mainWindow.loadFile(
-            path.join(__dirname, "frontend", "dist", "index.html")
-        );
-    }
+        const data = res.data;
 
-    else if (username === "emp" && password === "password") {
-        mainWindow.loadFile("employee.html");
+        if (!data.success) {
+            return data; // will trigger error display in login.html
+        }
+
+        // Store session in memory (optional)
+        global.authSession = { token: data.token, role: data.role, userId: data.userId };
+
+        // Navigate based on role
+        if (data.role === "mng") {
+            mainWindow.loadFile(
+                path.join(__dirname,"..", "frontend", "dist", "index.html")
+            );
+        } else if (data.role === "emp") {
+            event.sender.loadFile("employee.html");
+        } else {
+            event.sender.loadFile("login.html");
+        }
+
+        return data;
+
+    } catch (err) {
+        console.error("Login failed:", err.message);
+        return { success: false, message: err.message || "Login failed" };
     }
 });
 
-
+// App ready
 app.whenReady().then(createWindow);
 
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') app.quit();
+// Quit app when all windows closed
+app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") app.quit();
 });
 
-app.on('activate', () => {
+// macOS: re-create window on dock icon click
+app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
