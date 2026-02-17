@@ -1,5 +1,6 @@
 const { generateToken } = require("../utils/jwt");
 const { comparePassword, hashPassword } = require("../utils/password");
+const {userModel} = require("../models/user");
 
 // Simulated DB (replace with real DB later)
 const users = [
@@ -17,7 +18,10 @@ const users = [
     }
 ];
 
-async function login({ username, password }) {
+const loginController = async (req, res) => {
+    const { username, password } = req.body;
+
+    console.log("Login attempt for username:", username);
 
     const user = users.find(u => u.username === username);
     console.log("Found user:", user);
@@ -37,11 +41,14 @@ async function login({ username, password }) {
         role: user.role,
     });
 
-    return {
+    res.status(200).json({
         success: true,
+        message: 'Login successful',
+        username: user.username,
         role: user.role,
-        token,
-    };
+        token: token, // optionally JWT if you implement it
+        userId: user._id
+    });
 }
 
-module.exports = { login };
+module.exports = { login: loginController };
