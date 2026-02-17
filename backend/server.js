@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 
 const managerRoutes = require("./routes/manager.routes");
 const loginRoutes = require("./routes/login.routes");
+const employeeRoutes = require("./routes/employeeRoutes");
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 // Routes
 app.use("/api/managers", managerRoutes);
 app.use("/api/auth", loginRoutes);
+app.use("/api/employee", employeeRoutes);
 
 // Test route to confirm server is running
 app.get("/", (req, res) => {
