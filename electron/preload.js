@@ -1,5 +1,6 @@
-const { contextBridge, ipcRenderer } = require('electron');
+// preload.js
+const { contextBridge, ipcRenderer } = require("electron");
 
-contextBridge.exposeInMainWorld('electronAPI', {
-    sendLogin: (data) => ipcRenderer.send('login', data)
+contextBridge.exposeInMainWorld("electronAPI", {
+    loginController: (credentials) => ipcRenderer.invoke("login", credentials)
 });
