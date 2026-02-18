@@ -28,6 +28,7 @@ const navGroups = [
       { icon: ClipboardList, label: "Worksheet", path: "worksheet" },
       { icon: Users, label: "Teams", path: "teams" },
       { icon: Activity, label: "Monitoring", path: "monitoring" },
+       { icon: Mail, label: "Chat", path: "/app/chat" }, 
     ],
   },
   {

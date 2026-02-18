@@ -7,6 +7,8 @@ const mongoose = require("mongoose");
 const managerRoutes = require("./routes/manager.routes");
 const loginRoutes = require("./routes/login.routes");
 const employeeRoutes = require("./routes/employeeRoutes");
+const mailRoutes = require("./routes/mailRoutes");
+const payrollRoutes = require("./routes/payroll.routes"); 
 
 const app = express();
 
@@ -18,6 +20,16 @@ app.use(express.json());
 app.use("/api/managers", managerRoutes);
 app.use("/api/auth", loginRoutes);
 app.use("/api/employee", employeeRoutes);
+/* ================= MAIL CENTER ROUTES ================= */
+// You can choose to protect with JWT if needed
+// Option 1: Protected
+// app.use("/api/mail", authMiddleware, mailRoutes);
+
+// Option 2: Public (no JWT required)
+app.use("/api/mail", mailRoutes);
+
+// Payroll routes
+app.use("/api/payroll", payrollRoutes);
 
 // Test route to confirm server is running
 app.get("/", (req, res) => {

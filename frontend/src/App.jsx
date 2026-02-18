@@ -16,6 +16,7 @@ import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import Worksheet from "./pages/Worksheet";
 import AddEmployee from "./pages/AddEmployee.jsx";
+import ChatPage from "./pages/chatpage";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => {
               <Route path="payroll" element={<Payroll />} />
               <Route path="mail" element={<MailCenter />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="chat" element={<ChatPage />} />
               <Route path="worksheet" element={<Worksheet />} />
                 <Route path="add-employee" element={<AddEmployee />} />
             </Route>
