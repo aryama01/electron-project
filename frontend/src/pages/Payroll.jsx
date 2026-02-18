@@ -35,7 +35,7 @@ export default function Payroll() {
   // Fetch data from the dummy API
   useEffect(() => {
     const fetchPayroll = async () => {
-      const data = await apiClient.get("/payroll");
+      const data = await apiClient.getPayroll("/payroll");
       setPayrollData(data);
     };
     fetchPayroll();
