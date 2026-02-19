@@ -8,6 +8,7 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "@mongodb-js/saslprep": "^1.4.6",
     "axios": "^1.13.5",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
@@ -15,7 +16,8 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.1.0",
-    "mongoose": "^9.2.1"
+    "mongoose": "^9.2.1",
+    "multer": "^2.0.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"

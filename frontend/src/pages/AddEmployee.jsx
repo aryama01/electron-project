@@ -19,31 +19,36 @@ export default function AddEmployee() {
         lastName: "",
         email: "",
         password: "",
+        role: "employee",
         team: "",
-        role: "",
-        phone: "",
         department: "",
+        phone: "",
         joiningDate: "",
     });
 
-    const handleEmployeeSubmit = (e) => {
+    const handleEmployeeSubmit = async (e) => {
         e.preventDefault();
         console.log("Employee added:", employeeForm);
 
-        // TODO: connect to backend API here
-        const res = apiclients.employeeCreate(employeeForm);
+        try {
+            const res = await apiclients.employeeCreate(employeeForm);
+            console.log("Backend response:", res);
 
-        setEmployeeForm({
-            firstName: "",
-            lastName: "",
-            email: "",
-            password: "",
-            team: "",
-            role: "",
-            phone: "",
-            department: "",
-            joiningDate: "",
-        });
+            // Reset form
+            setEmployeeForm({
+                firstName: "",
+                lastName: "",
+                email: "",
+                password: "",
+                role: "employee",
+                team: "",
+                department: "",
+                phone: "",
+                joiningDate: "",
+            });
+        } catch (err) {
+            console.error("Error creating employee:", err);
+        }
     };
 
     return (
@@ -63,10 +68,7 @@ export default function AddEmployee() {
                             <Input
                                 value={employeeForm.firstName}
                                 onChange={(e) =>
-                                    setEmployeeForm((p) => ({
-                                        ...p,
-                                        firstName: e.target.value,
-                                    }))
+                                    setEmployeeForm((p) => ({ ...p, firstName: e.target.value }))
                                 }
                                 required
                             />
@@ -77,10 +79,7 @@ export default function AddEmployee() {
                             <Input
                                 value={employeeForm.lastName}
                                 onChange={(e) =>
-                                    setEmployeeForm((p) => ({
-                                        ...p,
-                                        lastName: e.target.value,
-                                    }))
+                                    setEmployeeForm((p) => ({ ...p, lastName: e.target.value }))
                                 }
                                 required
                             />
@@ -93,10 +92,7 @@ export default function AddEmployee() {
                             type="email"
                             value={employeeForm.email}
                             onChange={(e) =>
-                                setEmployeeForm((p) => ({
-                                    ...p,
-                                    email: e.target.value,
-                                }))
+                                setEmployeeForm((p) => ({ ...p, email: e.target.value }))
                             }
                             required
                         />
@@ -108,17 +104,75 @@ export default function AddEmployee() {
                             type="password"
                             value={employeeForm.password}
                             onChange={(e) =>
-                                setEmployeeForm((p) => ({
-                                    ...p,
-                                    password: e.target.value,
-                                }))
+                                setEmployeeForm((p) => ({ ...p, password: e.target.value }))
                             }
                             required
                         />
                     </div>
 
-                    <Separator />
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label>Role *</Label>
+                            <Select
+                                value={employeeForm.role}
+                                onValueChange={(val) =>
+                                    setEmployeeForm((p) => ({ ...p, role: val }))
+                                }
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select role" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="admin">Admin</SelectItem>
+                                    <SelectItem value="manager">Manager</SelectItem>
+                                    <SelectItem value="employee">Employee</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
 
+                        <div className="space-y-2">
+                            <Label>Team</Label>
+                            <Input
+                                value={employeeForm.team}
+                                onChange={(e) =>
+                                    setEmployeeForm((p) => ({ ...p, team: e.target.value }))
+                                }
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label>Department</Label>
+                            <Input
+                                value={employeeForm.department}
+                                onChange={(e) =>
+                                    setEmployeeForm((p) => ({ ...p, department: e.target.value }))
+                                }
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label>Phone</Label>
+                            <Input
+                                value={employeeForm.phone}
+                                onChange={(e) =>
+                                    setEmployeeForm((p) => ({ ...p, phone: e.target.value }))
+                                }
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label>Joining Date</Label>
+                        <Input
+                            type="date"
+                            value={employeeForm.joiningDate}
+                            onChange={(e) =>
+                                setEmployeeForm((p) => ({ ...p, joiningDate: e.target.value }))
+                            }
+                        />
+                    </div>
+
+                    <Separator />
                     <Button type="submit">Add Employee</Button>
                 </form>
             </div>

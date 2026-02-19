@@ -7,6 +7,9 @@ const mongoose = require("mongoose");
 const managerRoutes = require("./routes/manager.routes");
 const loginRoutes = require("./routes/login.routes");
 const employeeRoutes = require("./routes/employeeRoutes");
+const trackerRoutes = require("./routes/tracker.routes");
+const Tracker = require("./models/Tracker");
+
 
 const app = express();
 
@@ -18,6 +21,8 @@ app.use(express.json());
 app.use("/api/managers", managerRoutes);
 app.use("/api/auth", loginRoutes);
 app.use("/api/employee", employeeRoutes);
+app.use("/api/tracker", trackerRoutes);
+
 
 // Test route to confirm server is running
 app.get("/", (req, res) => {
@@ -39,3 +44,13 @@ mongoose
         console.error("❌ MongoDB connection failed:", err);
         process.exit(1);
     });
+
+//Heartbeat monitoring - set employees to offline if no heartbeat in last 2 minutes
+setInterval(async () => {
+    const threshold = new Date(Date.now() - 2 * 60 * 1000); // 2 minutes
+
+    await Tracker.updateMany(
+        { lastHeartbeat: { $lt: threshold } },
+        { status: "offline" }
+    );
+}, 30000);

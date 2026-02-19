@@ -1,11 +1,27 @@
 const mongoose = require('mongoose');
 
+
+
 const userSchema = new mongoose.Schema({
-    name: {
+    Id: {
+        type: mongoose.Schema.Types.ObjectId,
+        auto: true
+    },
+    firstName: {
         type: String,
         required: true,
         trim: true,
         minlength: 2
+    },
+    lastName: {
+        type: String,
+        required: true,
+        trim: true,
+        minlength: 2
+    },
+    name: {
+        type: String, // optional full name field
+        trim: true
     },
     email: {
         type: String,
@@ -22,7 +38,7 @@ const userSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['active', 'inactive', 'banned'],
+        enum: ['active', 'inactive', 'idle', 'banned'],
         default: 'active'
     },
     lastActive: {
@@ -34,30 +50,30 @@ const userSchema = new mongoose.Schema({
         enum: ['admin', 'manager', 'employee'],
         default: 'employee'
     },
+    team: {
+        type: String,
+        default: null
+    },
+    department: {
+        type: String,
+        default: null
+    },
     phone: {
         type: String,
+        default: null
+    },
+    joiningDate: {
+        type: Date,
         default: null
     },
     profilePic: {
         type: String,
         default: null
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date
     }
-});
+}, { timestamps: true }); // createdAt & updatedAt auto-managed
 
 
-// Update updatedAt on save
-userSchema.pre('save', function(next) {
-    this.updatedAt = Date.now();
-    next();
-});
+const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-const User = mongoose.model('User', userSchema);
 
 module.exports = User;

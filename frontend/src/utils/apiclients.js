@@ -90,7 +90,16 @@ const apiClient = {
       return null;
     }
   },
-
+  getPayrolls: async () => {
+    console.log("👤 Fetching current user info...");
+    try {
+      const res = await apiClient.get("/payroll"); // backend should provide /auth/me
+      return res;
+    } catch (err) {
+      console.error("❌ Failed to fetch current user:", err);
+      return null;
+    }
+  },
   // Logout method
   logout: () => {
     console.log("🚪 Logging out user...");

@@ -1,4 +1,4 @@
-const Employee = require("../models/Employee");
+const User = require("../models/User");
 const {hashPassword}= require("../utils/password");
 
 // CREATE EMPLOYEE
@@ -18,7 +18,7 @@ const createEmployee = async (req, res) => {
         console.log("📌 Creating employee with data:");
 
         // Check if employee exists
-        const existingEmployee = await Employee.findOne({ email });
+        const existingEmployee = await User.findOne({ email });
         if (existingEmployee) {
             return res.status(400).json({ message: "Employee already exists" });
         }
@@ -28,7 +28,7 @@ const createEmployee = async (req, res) => {
         const hashedPassword = await hashPassword(password);
         console.log("🔒 Password hashed successfully");
 
-        const employee = await Employee.create({
+        const employee = await User.create({
             firstName,
             lastName,
             email,
