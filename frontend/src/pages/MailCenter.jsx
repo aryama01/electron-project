@@ -1,5 +1,5 @@
 // javascript
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -14,78 +14,67 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { Send, Inbox, FileText, Bell, Mail, Clock } from "lucide-react";
 
-const sentMails = [
-  {
-    id: 1,
-    to: "Backend Team",
-    subject: "Sprint Planning Meeting",
-    date: "Feb 05, 2024",
-    time: "10:30 AM",
-  },
-  {
-    id: 2,
-    to: "Rahul Kumar",
-    subject: "Project Update Required",
-    date: "Feb 04, 2024",
-    time: "3:15 PM",
-  },
-  {
-    id: 3,
-    to: "All Teams",
-    subject: "Holiday Notice - Republic Day",
-    date: "Feb 03, 2024",
-    time: "9:00 AM",
-  },
-];
-
-const drafts = [
-  {
-    id: 1,
-    to: "QA Team",
-    subject: "Testing Guidelines Update",
-    date: "Feb 05, 2024",
-  },
-  {
-    id: 2,
-    to: "Design Team",
-    subject: "Brand Assets Review",
-    date: "Feb 04, 2024",
-  },
-];
-
-const notifications = [
-  {
-    id: 1,
-    title: "New Task Assigned",
-    message: "You have been assigned a new task by Rahul",
-    time: "5 min ago",
-    read: false,
-  },
-  {
-    id: 2,
-    title: "Task Completed",
-    message: "Priya completed the UI review task",
-    time: "1 hour ago",
-    read: false,
-  },
-  {
-    id: 3,
-    title: "Meeting Reminder",
-    message: "Sprint planning meeting in 30 minutes",
-    time: "2 hours ago",
-    read: true,
-  },
-  {
-    id: 4,
-    title: "Payslip Generated",
-    message: "January 2024 payslips are now available",
-    time: "1 day ago",
-    read: true,
-  },
-];
+// Data will be loaded from backend dummy endpoints
 
 export default function MailCenter() {
   const [recipient, setRecipient] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+
+  const [sentMails, setSentMails] = useState([]);
+  const [drafts, setDrafts] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+
+  const API_BASE = "http://localhost:5000";
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const [sRes, dRes, nRes] = await Promise.all([
+          fetch(`${API_BASE}/api/mail/sent`),
+          fetch(`${API_BASE}/api/mail/drafts`),
+          fetch(`${API_BASE}/api/mail/notifications`),
+        ]);
+
+        if (sRes.ok) setSentMails(await sRes.json());
+        if (dRes.ok) setDrafts(await dRes.json());
+        if (nRes.ok) setNotifications(await nRes.json());
+      } catch (err) {
+        console.error("Failed to load mail data:", err);
+      }
+    };
+
+    load();
+  }, []);
+
+  const handleSend = async () => {
+    if (!recipient || !subject || !message) {
+      alert("Please fill To, Subject and Message.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/mail/send`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to: recipient, subject, message }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Send failed");
+      }
+
+      const newMail = await res.json();
+      setSentMails((prev) => [newMail, ...prev]);
+      setRecipient("");
+      setSubject("");
+      setMessage("");
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Failed to send mail");
+    }
+  };
 
   return (
       <div className="animate-fade-in">
@@ -123,13 +112,15 @@ export default function MailCenter() {
 
                 <div className="space-y-2">
                   <Label htmlFor="subject">Subject</Label>
-                  <Input id="subject" placeholder="Enter email subject" />
+                  <Input id="subject" value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Enter email subject" />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="message">Message</Label>
                   <Textarea
                       id="message"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
                       placeholder="Write your message here..."
                       rows={8}
                       className="resize-none"
@@ -137,7 +128,7 @@ export default function MailCenter() {
                 </div>
 
                 <div className="flex gap-3">
-                  <Button className="gap-2">
+                  <Button className="gap-2" onClick={handleSend}>
                     <Send size={16} />
                     Send
                   </Button>
