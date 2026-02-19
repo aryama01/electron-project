@@ -58,6 +58,7 @@ const apiClient = {
   login: async (credentials) => {
     console.log(API_BASE_URL, "Attempting login with credentials:", { ...credentials, password: "********" });
     const data = await apiClient.post("/auth/login", credentials);
+    console.log(data);
     if (data.success && data.token) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role || "");

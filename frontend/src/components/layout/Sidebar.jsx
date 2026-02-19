@@ -13,6 +13,9 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "../../lib/utils";
+import { useNavigate } from "react-router-dom";
+
+
 
 const navGroups = [
   {
@@ -45,6 +48,7 @@ const navGroups = [
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
 
   return (
       <aside
@@ -102,7 +106,10 @@ export function Sidebar() {
 
         {/* Logout */}
         <div className="p-3 border-t border-sidebar-border">
-          <button className="sidebar-item w-full flex items-center gap-3 text-destructive hover:text-destructive">
+          <button className="sidebar-item w-full flex items-center gap-3 text-destructive hover:text-destructive" onClick={() => {
+              localStorage.clear();
+              navigate("/");
+          }}>
             <LogOut size={20} />
             {!collapsed && <span>Logout</span>}
           </button>

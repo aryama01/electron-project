@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import apiClient from "../utils/apiclients";
 
 const Login = () => {
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
 
@@ -13,8 +13,9 @@ const Login = () => {
 
         e.preventDefault();
         try {
-            console.log("Attempting login with:", { username, password: "********" });
-            const data = await apiClient.login({ username, password });
+            console.log("Attempting login with:", { email, password: "********" });
+            const data = await apiClient.login({ email, password });
+            console.log(data);
 
 
             if ( data.success) {
@@ -111,12 +112,12 @@ const Login = () => {
                 <form onSubmit={handleSubmit}>
                     <div style={{ marginBottom: "22px" }}>
                         <label style={{ fontSize: "13px", fontWeight: 600 }}>
-                            Username
+                            Email
                         </label>
                         <input
                             type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             required
                             placeholder="Enter your username"
                             style={{
