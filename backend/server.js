@@ -8,6 +8,7 @@ const managerRoutes = require("./routes/manager.routes");
 const loginRoutes = require("./routes/login.routes");
 const employeeRoutes = require("./routes/employeeRoutes");
 const trackerRoutes = require("./routes/tracker.routes");
+const mailRoutes = require("./routes/mailRoutes");
 const Tracker = require("./models/Tracker");
 
 
@@ -22,6 +23,7 @@ app.use("/api/managers", managerRoutes);
 app.use("/api/auth", loginRoutes);
 app.use("/api/employee", employeeRoutes);
 app.use("/api/tracker", trackerRoutes);
+app.use("/api/mail", mailRoutes);
 
 
 // Test route to confirm server is running
