@@ -2,10 +2,10 @@ import { Toaster } from "./components/ui/toaster";
 import { Toaster as Sooner } from "./components/ui/sonner";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { create RouterProvider, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import { MainLayout } from "./components/layout/MainLayout";
-import Login from "./pages/login";
+
 import Index from "./pages/Index";
 import Teams from "./pages/Teams";
 import Tasks from "./pages/Tasks";
@@ -15,54 +15,36 @@ import MailCenter from "./pages/MailCenter";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import Worksheet from "./pages/Worksheet";
+import AddEmployee from "./pages/AddEmployee.jsx";
+import ChatPage from "./pages/chatpage";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  // Show Login at '/', app/dashboard under '/app'
-  const router = createBrowserRouter(
-    [
-      { path: "/", element: <Login /> },
-      {
-        path: "/app",
-        element: <MainLayout />,
-        children: [
-          { index: true, element: <Index /> },
-          { path: "teams", element: <Teams /> },
-          { path: "tasks", element: <Tasks /> },
-          { path: "monitoring", element: <WorkMonitoring /> },
-          { path: "payroll", element: <Payroll /> },
-          { path: "mail", element: <MailCenter /> },
-          { path: "settings", element: <Settings /> },
-          { path: "worksheet", element: <Worksheet /> },
-          { path: "*", element: <NotFound /> },
-        ],
-      },
-    ],
-    { future: { v7_startTransition: true, v7_relativeSplatPath: true } }
-  );
   return (
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          {/* Toast notifications */}
           <Toaster />
           <Sooner />
 
-          <BrowserRouter>
-            <MainLayout>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/teams" element={<Teams />} />
-                <Route path="/tasks" element={<Tasks />} />
-                <Route path="/monitoring" element={<WorkMonitoring />} />
-                <Route path="/payroll" element={<Payroll />} />
-                <Route path="/mail" element={<MailCenter />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="*" element={<NotFound />} />
-                <Route path="/worksheet" element={<Worksheet />} />
-              </Routes>
-            </MainLayout>
-          </BrowserRouter>
+          <Routes>
+            {/* Layout Route */}
+            <Route element={<MainLayout />}>
+              <Route index element={<Index />} />
+              <Route path="teams" element={<Teams />} />
+              <Route path="tasks" element={<Tasks />} />
+              <Route path="monitoring" element={<WorkMonitoring />} />
+              <Route path="payroll" element={<Payroll />} />
+              <Route path="mail" element={<MailCenter />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="chat" element={<ChatPage />} />
+              <Route path="worksheet" element={<Worksheet />} />
+                <Route path="add-employee" element={<AddEmployee />} />
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+
         </TooltipProvider>
       </QueryClientProvider>
   );

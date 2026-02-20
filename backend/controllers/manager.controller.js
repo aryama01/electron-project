@@ -1,4 +1,4 @@
-const Manager = require("../models/manager.model");
+const Manager = require("../models/user");
 const managers = require("../data/manager.store");
 
 exports.createManager = (req, res) => {
