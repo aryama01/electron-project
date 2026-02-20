@@ -10,14 +10,13 @@ const loginController = async (req, res) => {
 
     const user = await User.findOne({ email: email});
     console.log("Found user:", user);
-
     if (!user) {
-        return { success: false, message: "Invalid credentials" };
+        return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
     const isMatch = await comparePassword(password,user.password);
 
-    if ( !isMatch) {
-        return { success: false, message: "Invalid credentials" };
+    if (!isMatch) {
+        return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
 
     const token = generateToken({
