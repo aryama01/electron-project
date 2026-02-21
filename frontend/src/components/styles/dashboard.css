@@ -1,0 +1,103 @@
+/* ----------------------- Break Button ----------------------- */
+.btn-break {
+    background-color: #facc15; /* yellow */
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+.btn-break:hover {
+    background-color: #eab308;
+    transform: translateY(-1px);
+}
+.btn-break:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+.btn-check-in {
+    background-color: #059669;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+.btn-check-in:hover {
+    background-color: #059669;
+    transform: translateY(-1px);
+}
+
+.btn-check-out {
+    background-color: #dc2626;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+.btn-check-out:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+.work-timer-card {
+    grid-column: span 4; /* Span full width */
+    background: linear-gradient(135deg, var(--bg-card) 0%, #f8fafc 100%);
+    border-radius: var(--radius);
+    padding: 20px 32px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+.timer-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.timer-display {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -1px;
+    line-height: 1;
+}
+.timer-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+.timer-controls {
+    display: flex;
+    gap: 12px;
+}

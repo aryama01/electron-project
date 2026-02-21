@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        primary: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+                        slate: { 850: '#1e293b', 900: '#0f172a' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="font-sans antialiased bg-gray-100 text-slate-700">
+
+<div class="flex h-screen overflow-hidden">
+
+    <!-- 📌 1️⃣ SIDEBAR -->
+    <aside class="w-64 bg-slate-900 text-white flex flex-col fixed h-full z-20">
+        <div class="h-16 flex items-center justify-center border-b border-slate-700/50 px-4">
+            <span class="text-xl font-bold text-blue-400 tracking-tight">EmpPortal</span>
+        </div>
+
+        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+            <a href="#" onclick="showPage('dashboard')" class="nav-link active flex items-center gap-3 px-4 py-2.5 rounded-lg text-white bg-slate-800/50 transition">
+                <span class="text-lg">🏠</span>
+                <span class="text-sm font-medium">Dashboard</span>
+            </a>
+            <a href="#" onclick="showPage('tasks')" class="nav-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition">
+                <span class="text-lg">📋</span>
+                <span class="text-sm font-medium">My Tasks</span>
+            </a>
+            <a href="#" onclick="showPage('team')" class="nav-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition">
+                <span class="text-lg">👥</span>
+                <span class="text-sm font-medium">My Team</span>
+            </a>
+            <a href="#" onclick="showPage('directory')" class="nav-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition">
+                <span class="text-lg">👤</span>
+                <span class="text-sm font-medium">Directory</span>
+            </a>
+            <a href="#" onclick="showPage('activity')" class="nav-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition">
+                <span class="text-lg">📊</span>
+                <span class="text-sm font-medium">My Activity</span>
+            </a>
+            <a href="#" onclick="showPage('payslips')" class="nav-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition">
+                <span class="text-lg">💰</span>
+                <span class="text-sm font-medium">My Payslips</span>
+            </a>
+            <a href="#" onclick="showPage('mail')" class="nav-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition">
+                <span class="text-lg">📧</span>
+                <span class="text-sm font-medium">Mail Center</span>
+            </a>
+        </nav>
+
+        <div class="p-3 border-t border-slate-700/50 space-y-1">
+            <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition">
+                <span class="text-lg">⚙️</span>
+                <span class="text-sm font-medium">Settings</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-red-400 hover:bg-red-900/20 transition">
+                <span class="text-lg">🚪</span>
+                <span class="text-sm font-medium"
+                      onclick="window.location.href='loginController.html'">
+                    Logout
+                </span>
+
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 ml-64 overflow-y-auto bg-gray-50">
+
+        <!-- Top Header -->
+        <header class="bg-white h-16 border-b border-gray-200 flex items-center justify-between px-8 sticky top-0 z-10">
+            <div>
+                <h1 id="page-title" class="text-xl font-semibold text-slate-800">Dashboard</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="relative p-2 hover:bg-gray-100 rounded-full">
+                    <span class="text-xl">🔔</span>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                <div class="flex items-center gap-3 border-l pl-4">
+                    <img src="https://i.pravatar.cc/40?img=12" class="w-9 h-9 rounded-full" alt="User">
+                    <div class="text-sm">
+                        <p class="font-semibold text-slate-700">Rahul Sharma</p>
+                        <p class="text-xs text-slate-400">Backend Developer</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT CONTAINER -->
+        <div class="p-8">
+
+            <!-- 🏠 2️⃣ DASHBOARD PAGE -->
+            <div id="page-dashboard" class="page-content">
+
+                <!-- Top Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-blue-500 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase font-medium">Total Tasks</p>
+                            <p class="text-2xl font-bold text-slate-800 mt-1">24</p>
+                        </div>
+                        <div class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center text-blue-500">📋</div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-yellow-500 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase font-medium">Pending</p>
+                            <p class="text-2xl font-bold text-slate-800 mt-1">5</p>
+                        </div>
+                        <div class="w-10 h-10 bg-yellow-50 rounded-full flex items-center justify-center text-yellow-500">⏳</div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-green-500 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase font-medium">Completed</p>
+                            <p class="text-2xl font-bold text-slate-800 mt-1">18</p>
+                        </div>
+                        <div class="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center text-green-500">✅</div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-red-500 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase font-medium">Overdue</p>
+                            <p class="text-2xl font-bold text-slate-800 mt-1">1</p>
+                        </div>
+                        <div class="w-10 h-10 bg-red-50 rounded-full flex items-center justify-center text-red-500">⚠️</div>
+                    </div>
+                </div>
+
+                <!-- Secondary Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white p-5 rounded-xl shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-2xl">⏱</div>
+                        <div>
+                            <p class="text-xs text-slate-500">Active Hours Today</p>
+                            <p class="text-xl font-bold text-slate-800">6h 45m</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-2xl">📈</div>
+                        <div>
+                            <p class="text-xs text-slate-500">Productivity</p>
+                            <p class="text-xl font-bold text-slate-800">87%</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center text-2xl">👥</div>
+                        <div>
+                            <p class="text-xs text-slate-500">Team</p>
+                            <p class="text-xl font-bold text-slate-800">Backend</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts & Quick Info -->
+                <div class="grid grid-cols-12 gap-6">
+                    <!-- Charts Section -->
+                    <div class="col-span-8 space-y-6">
+                        <!-- Task Completion Trend -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm">
+                            <h3 class="font-semibold text-slate-700 mb-4">📈 Task Completion Trend</h3>
+                            <div class="h-48 w-full bg-gradient-to-r from-blue-50 to-white rounded-lg flex items-end justify-between p-4 gap-2 border border-gray-100">
+                                <!-- Fake Bar Chart -->
+                                <div class="w-full flex items-end gap-2 h-32">
+                                    <div class="flex-1 bg-blue-300 rounded-t h-1/2 hover:bg-blue-400 transition-all"></div>
+                                    <div class="flex-1 bg-blue-400 rounded-t h-3/4 hover:bg-blue-500 transition-all"></div>
+                                    <div class="flex-1 bg-blue-300 rounded-t h-1/3 hover:bg-blue-400 transition-all"></div>
+                                    <div class="flex-1 bg-blue-500 rounded-t h-full hover:bg-blue-600 transition-all"></div>
+                                    <div class="flex-1 bg-blue-400 rounded-t h-2/3 hover:bg-blue-500 transition-all"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Productivity & Active Time -->
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded-xl shadow-sm">
+                                <h3 class="font-semibold text-slate-700 mb-4 text-sm">📊 Weekly Productivity</h3>
+                                <div class="h-32 bg-gray-50 rounded-lg flex items-center justify-center text-slate-300 border border-dashed">Chart Area</div>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-sm">
+                                <h3 class="font-semibold text-slate-700 mb-4 text-sm">⏱ Active vs Idle Time</h3>
+                                <div class="h-32 bg-gray-50 rounded-lg flex items-center justify-center text-slate-300 border border-dashed">Donut Chart</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Info Section -->
+                    <div class="col-span-4 space-y-6">
+                        <!-- Upcoming Deadlines -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm">
+                            <h3 class="font-semibold text-slate-700 mb-4 text-sm flex items-center justify-between">
+                                Upcoming Deadlines
+                                <span class="text-xs text-blue-500 font-normal cursor-pointer hover:underline">View All</span>
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="p-3 bg-red-50 rounded-lg border border-red-100">
+                                    <p class="text-sm font-medium text-slate-700">API Integration</p>
+                                    <p class="text-xs text-red-500 mt-1">Due: Tomorrow</p>
+                                </div>
+                                <div class="p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                    <p class="text-sm font-medium text-slate-700">Code Review</p>
+                                    <p class="text-xs text-blue-500 mt-1">Due: 10 Feb</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Notifications -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm">
+                            <h3 class="font-semibold text-slate-700 mb-4 text-sm">Recent Notifications</h3>
+                            <div class="space-y-3">
+                                <div class="flex gap-3 items-start">
+                                    <span class="w-2 h-2 mt-1.5 bg-green-400 rounded-full"></span>
+                                    <div>
+                                        <p class="text-xs text-slate-600">Leave request approved.</p>
+                                        <p class="text-xs text-slate-400 mt-0.5">1h ago</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-3 items-start">
+                                    <span class="w-2 h-2 mt-1.5 bg-blue-400 rounded-full"></span>
+                                    <div>
+                                        <p class="text-xs text-slate-600">New task assigned by Manager.</p>
+                                        <p class="text-xs text-slate-400 mt-0.5">3h ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Manager Message -->
+                        <div class="bg-gradient-to-r from-slate-800 to-slate-700 p-5 rounded-xl shadow-sm text-white">
+                            <p class="text-xs opacity-75 mb-2">Message from Manager</p>
+                            <p class="text-sm font-medium italic">"Great work on the last module. Keep it up!"</p>
+                            <p class="text-xs mt-3 opacity-50 text-right">- Rajesh Kumar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 📋 3️⃣ MY TASKS PAGE -->
+            <div id="page-tasks" class="page-content hidden">
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div class="p-5 border-b flex justify-between items-center">
+                        <h3 class="font-semibold text-slate-700">My Assigned Tasks</h3>
+                        <div class="flex gap-2">
+                            <select class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white focus:outline-none">
+                                <option>All Status</option>
+                                <option>In Progress</option>
+                                <option>Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-slate-500 uppercase text-xs tracking-wider">
+                        <tr>
+                            <th class="px-6 py-3">Task ID</th>
+                            <th class="px-6 py-3">Title</th>
+                            <th class="px-6 py-3">Priority</th>
+                            <th class="px-6 py-3">Deadline</th>
+                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-3">Assigned By</th>
+                            <th class="px-6 py-3">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-slate-600">T101</td>
+                            <td class="px-6 py-4">API Integration</td>
+                            <td class="px-6 py-4"><span class="px-2 py-0.5 bg-red-100 text-red-600 rounded text-xs font-medium">High</span></td>
+                            <td class="px-6 py-4">05 Feb</td>
+                            <td class="px-6 py-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-medium">In Progress</span></td>
+                            <td class="px-6 py-4 text-slate-500">Rajesh Kumar</td>
+                            <td class="px-6 py-4">
+                                <button onclick="openModal('task-modal')" class="text-blue-500 hover:text-blue-700 font-medium">View</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-slate-600">T102</td>
+                            <td class="px-6 py-4">DB Schema Update</td>
+                            <td class="px-6 py-4"><span class="px-2 py-0.5 bg-yellow-100 text-yellow-600 rounded text-xs font-medium">Medium</span></td>
+                            <td class="px-6 py-4">10 Feb</td>
+                            <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">Completed</span></td>
+                            <td class="px-6 py-4 text-slate-500">Amit Singh</td>
+                            <td class="px-6 py-4">
+                                <button class="text-blue-500 hover:text-blue-700 font-medium">View</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!-- Pagination -->
+                    <div class="p-4 border-t flex justify-between items-center">
+                        <span class="text-xs text-slate-500">Showing 1 to 10 of 24 entries</span>
+                        <div class="flex gap-1">
+                            <button class="px-3 py-1 text-xs border rounded hover:bg-gray-50">Prev</button>
+                            <button class="px-3 py-1 text-xs border rounded bg-blue-500 text-white">1</button>
+                            <button class="px-3 py-1 text-xs border rounded hover:bg-gray-50">2</button>
+                            <button class="px-3 py-1 text-xs border rounded hover:bg-gray-50">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 👥 4️⃣ MY TEAM PAGE -->
+            <div id="page-team" class="page-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Team Card -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 font-bold">BE</div>
+                            <div>
+                                <h3 class="font-bold text-slate-800">Backend Team</h3>
+                                <p class="text-xs text-slate-400">Development Unit</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-sm mb-4">
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Manager:</span>
+                                <span class="font-medium text-slate-700">Rajesh Kumar</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Members:</span>
+                                <span class="font-medium text-slate-700">6</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Active Tasks:</span>
+                                <span class="font-medium text-blue-600">12</span>
+                            </div>
+                        </div>
+                        <button onclick="openModal('team-members-modal')" class="w-full mt-2 py-2 border border-blue-500 text-blue-500 rounded-lg text-sm font-medium hover:bg-blue-50 transition">
+                            View Members
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 👤 5️⃣ EMPLOYEES DIRECTORY PAGE -->
+            <div id="page-directory" class="page-content hidden">
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <!-- Search Section -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 pb-6 border-b">
+                        <input type="text" placeholder="Search by Name..." class="col-span-2 border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <select class="border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none bg-white">
+                            <option>All Teams</option>
+                            <option>Backend</option>
+                            <option>Frontend</option>
+                            <option>HR</option>
+                        </select>
+                        <select class="border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none bg-white">
+                            <option>All Roles</option>
+                            <option>Developer</option>
+                            <option>Manager</option>
+                            <option>Designer</option>
+                        </select>
+                    </div>
+
+                    <!-- Employees Table -->
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-slate-500 uppercase text-xs tracking-wider">
+                        <tr>
+                            <th class="px-6 py-3">Name</th>
+                            <th class="px-6 py-3">Team</th>
+                            <th class="px-6 py-3">Role</th>
+                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-3">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <img src="https://i.pravatar.cc/40?img=11" class="w-8 h-8 rounded-full" alt="">
+                                    <span class="font-medium text-slate-700">Priya Singh</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-slate-500">Frontend</td>
+                            <td class="px-6 py-4 text-slate-500">UI Developer</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs">Active</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <button onclick="openModal('profile-modal')" class="text-blue-500 hover:text-blue-700 font-medium">View Profile</button>
+                            </td>
+                        </tr>
+                        <!-- Add more rows as needed -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 📊 7️⃣ MY ACTIVITY PAGE -->
+            <div id="page-activity" class="page-content hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <!-- Activity Stats -->
+                    <div class="bg-white p-5 rounded-xl shadow-sm">
+                        <p class="text-sm text-slate-500">Login Time</p>
+                        <p class="text-2xl font-bold text-slate-800 mt-1">09:05 AM</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm">
+                        <p class="text-sm text-slate-500">Active Hours</p>
+                        <p class="text-2xl font-bold text-green-600 mt-1">6h 45m</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm">
+                        <p class="text-sm text-slate-500">Idle Time</p>
+                        <p class="text-2xl font-bold text-red-500 mt-1">45m</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-semibold text-slate-700">Activity Log</h3>
+                        <button class="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100">
+                            Download Report
+                        </button>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div class="flex items-center gap-4">
+                                <span class="text-xl">📸</span>
+                                <div>
+                                    <p class="text-sm font-medium text-slate-700">Screenshot Captured</p>
+                                    <p class="text-xs text-slate-400">VS Code - api_integration.js</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-slate-500">10 mins ago</span>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div class="flex items-center gap-4">
+                                <span class="text-xl">⌨️</span>
+                                <div>
+                                    <p class="text-sm font-medium text-slate-700">High Activity Detected</p>
+                                    <p class="text-xs text-slate-400">Mouse & Keyboard input</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-slate-500">11:00 AM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 💰 8️⃣ MY PAYSLIPS PAGE -->
+            <div id="page-payslips" class="page-content hidden">
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div class="p-5 border-b flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm text-slate-600">Select Month:</span>
+                            <input type="month" class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm">
+                        </div>
+                    </div>
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-slate-500 uppercase text-xs">
+                        <tr>
+                            <th class="px-6 py-3">Month</th>
+                            <th class="px-6 py-3">Basic</th>
+                            <th class="px-6 py-3">Bonus</th>
+                            <th class="px-6 py-3">Deductions</th>
+                            <th class="px-6 py-3">Net Pay</th>
+                            <th class="px-6 py-3">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium">January 2024</td>
+                            <td class="px-6 py-4">₹50,000</td>
+                            <td class="px-6 py-4 text-green-600">₹2,000</td>
+                            <td class="px-6 py-4 text-red-500">₹500</td>
+                            <td class="px-6 py-4 font-bold text-slate-800">₹51,500</td>
+                            <td class="px-6 py-4">
+                                <button class="text-blue-500 hover:text-blue-700">📥 Download PDF</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 📧 9️⃣ MAIL CENTER PAGE -->
+            <div id="page-mail" class="page-content hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Compose Section -->
+                    <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm">
+                        <h3 class="font-semibold text-slate-700 mb-4">Compose Mail</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-xs text-slate-500 block mb-1">To:</label>
+                                <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                    <option>Manager</option>
+                                    <option>Team</option>
+                                    <option>HR Department</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs text-slate-500 block mb-1">Subject:</label>
+                                <input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Subject...">
+                            </div>
+                            <div>
+                                <label class="text-xs text-slate-500 block mb-1">Message:</label>
+                                <textarea rows="4" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none" placeholder="Write your message..."></textarea>
+                            </div>
+                            <button class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition">
+                                Send Message
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Inbox/List Section -->
+                    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm">
+                        <div class="border-b">
+                            <nav class="flex gap-4 px-6 pt-4">
+                                <button class="px-3 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600">Inbox</button>
+                                <button class="px-3 py-2 text-sm font-medium text-slate-500 hover:text-slate-700">Sent</button>
+                                <button class="px-3 py-2 text-sm font-medium text-slate-500 hover:text-slate-700">Notifications</button>
+                            </nav>
+                        </div>
+                        <div class="divide-y">
+                            <div class="p-4 hover:bg-gray-50 cursor-pointer">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h4 class="font-semibold text-slate-700 text-sm">Manager</h4>
+                                    <span class="text-xs text-slate-400">10:30 AM</span>
+                                </div>
+                                <p class="text-sm font-medium text-slate-600">Task Update Required</p>
+                                <p class="text-xs text-slate-400 truncate">Please update the status of the API integration task...</p>
+                            </div>
+                            <div class="p-4 hover:bg-gray-50 cursor-pointer bg-blue-50/50">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h4 class="font-semibold text-slate-700 text-sm">HR Department</h4>
+                                    <span class="text-xs text-slate-400">Yesterday</span>
+                                </div>
+                                <p class="text-sm font-medium text-slate-600">Policy Update</p>
+                                <p class="text-xs text-slate-400 truncate">Please find attached the updated leave policy document...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- MODALS -->
+
+<!-- Task Detail Modal -->
+<div id="task-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
+        <div class="p-6 border-b flex justify-between items-center">
+            <div>
+                <h2 class="text-lg font-bold text-slate-800">API Integration</h2>
+                <span class="text-xs text-slate-400">ID: T101</span>
+            </div>
+            <button onclick="closeModal('task-modal')" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
+        </div>
+        <div class="p-6 space-y-4">
+            <div>
+                <h4 class="text-xs text-slate-500 uppercase mb-1">Description</h4>
+                <p class="text-sm text-slate-700">Integrate the third-party payment gateway API with the existing checkout module. Handle error responses appropriately.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <h4 class="text-xs text-slate-500 uppercase mb-1">Priority</h4>
+                    <span class="px-2 py-0.5 bg-red-100 text-red-600 rounded text-xs font-medium">High</span>
+                </div>
+                <div>
+                    <h4 class="text-xs text-slate-500 uppercase mb-1">Deadline</h4>
+                    <p class="text-sm text-slate-700 font-medium">05 Feb 2024</p>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-xs text-slate-500 uppercase mb-2">Attachments</h4>
+                <div class="bg-gray-50 p-2 rounded border text-xs text-slate-500 flex items-center gap-2">
+                    <span>📄</span> API_Docs.pdf
+                </div>
+            </div>
+            <div>
+                <h4 class="text-xs text-slate-500 uppercase mb-2">Comments</h4>
+                <div class="space-y-3 max-h-32 overflow-y-auto">
+                    <div class="flex gap-2">
+                        <img src="https://i.pravatar.cc/40?img=3" class="w-6 h-6 rounded-full">
+                        <div class="bg-gray-100 p-2 rounded-lg text-xs text-slate-600">
+                            <span class="font-semibold block">Manager</span>
+                            Please update the progress by EOD.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 bg-gray-50 flex justify-end gap-3">
+            <button onclick="closeModal('task-modal')" class="px-4 py-2 text-sm text-slate-600 hover:bg-gray-200 rounded-lg">Close</button>
+            <button class="px-4 py-2 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600">Mark as Completed</button>
+        </div>
+    </div>
+</div>
+
+<!-- Employee Profile Modal (Privacy Safe) -->
+<div id="profile-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden relative">
+        <button onclick="closeModal('profile-modal')" class="absolute top-4 right-4 text-white/80 hover:text-white text-xl">&times;</button>
+        <!-- Header Background -->
+        <div class="h-24 bg-gradient-to-r from-blue-500 to-blue-600"></div>
+
+        <!-- Profile Content -->
+        <div class="relative px-6 pb-6 text-center">
+            <img src="https://i.pravatar.cc/100?img=11" class="w-20 h-20 rounded-full border-4 border-white -mt-10 mx-auto shadow-lg" alt="Profile">
+            <h2 class="mt-2 text-xl font-bold text-slate-800">Priya Singh</h2>
+            <p class="text-sm text-blue-600 font-medium">UI Developer</p>
+            <span class="inline-block mt-1 px-2 py-0.5 bg-slate-100 text-slate-500 rounded text-xs">Frontend Team</span>
+
+            <!-- Info Grid -->
+            <div class="mt-6 text-left border-t pt-4 space-y-3">
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-500">Experience:</span>
+                    <span class="text-slate-700 font-medium">3 Years</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-500">Joined:</span>
+                    <span class="text-slate-700 font-medium">Jan 2022</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-500">College:</span>
+                    <span class="text-slate-700 font-medium">Delhi University</span>
+                </div>
+                <!-- Skills -->
+                <div>
+                    <p class="text-sm text-slate-500 mb-2">Skills:</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs">React.js</span>
+                        <span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs">Tailwind CSS</span>
+                        <span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs">TypeScript</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Task Section -->
+            <div class="mt-4 text-left border-t pt-4">
+                <h3 class="text-xs text-slate-500 uppercase mb-2">Current Task</h3>
+                <div class="p-3 bg-blue-50 rounded-lg">
+                    <p class="text-sm font-medium text-slate-700">Dashboard Redesign</p>
+                    <p class="text-xs text-slate-500 mt-1">Deadline: 10 Feb | Status: In Progress</p>
+                </div>
+            </div>
+
+            <!-- Privacy Notice -->
+            <p class="mt-4 text-xs text-slate-400">
+                * Only professional public information is displayed.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Team Members Modal -->
+<div id="team-members-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden">
+        <div class="p-5 border-b flex justify-between items-center">
+            <h2 class="font-bold text-slate-800">Backend Team Members</h2>
+            <button onclick="closeModal('team-members-modal')" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
+        </div>
+        <div class="p-6">
+            <table class="w-full text-sm">
+                <thead>
+                <tr class="text-left text-slate-500">
+                    <th class="pb-2">Name</th>
+                    <th class="pb-2">Role</th>
+                    <th class="pb-2">Status</th>
+                    <th class="pb-2">Action</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y">
+                <tr>
+                    <td class="py-3 flex items-center gap-2"><img src="https://i.pravatar.cc/40?img=12" class="w-6 h-6 rounded-full"> Rahul Sharma</td>
+                    <td>Backend Dev</td>
+                    <td><span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs">Active</span></td>
+                    <td><button class="text-blue-500 text-xs">View Profile</button></td>
+                </tr>
+                <tr>
+                    <td class="py-3 flex items-center gap-2"><img src="https://i.pravatar.cc/40?img=14" class="w-6 h-6 rounded-full"> Amit Verma</td>
+                    <td>Senior Dev</td>
+                    <td><span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full text-xs">In Meeting</span></td>
+                    <td><button class="text-blue-500 text-xs">View Profile</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simple Navigation Controller
+    function showPage(pageId) {
+        // Hide all pages
+        document.querySelectorAll('.page-content').forEach(page => {
+            page.classList.add('hidden');
+        });
+
+        // Show selected page
+        document.getElementById('page-' + pageId).classList.remove('hidden');
+
+        // Update Active Link Style
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active', 'bg-slate-800/50', 'text-white');
+            link.classList.add('text-slate-400');
+        });
+
+        // Find and activate the clicked link (simplified for demo)
+        event.target.closest('.nav-link').classList.add('active', 'bg-slate-800/50', 'text-white');
+        event.target.closest('.nav-link').classList.remove('text-slate-400');
+
+        // Update Page Title
+        const titles = {
+            'dashboard': 'Dashboard',
+            'tasks': 'My Tasks',
+            'team': 'My Team',
+            'directory': 'Employees Directory',
+            'activity': 'My Activity',
+            'payslips': 'My Payslips',
+            'mail': 'Mail Center'
+        };
+        document.getElementById('page-title').innerText = titles[pageId] || 'Dashboard';
+    }
+
+    // Modal Controllers
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Prevent background scroll
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Close modal on outside click
+    document.querySelectorAll('.fixed.inset-0').forEach(modal => {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    });
+</script>
+</body>
+</html>

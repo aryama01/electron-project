@@ -1,0 +1,9 @@
+# Node
+node_modules/
+
+# Electron build files
+dist/
+release/
+build/
+*.exe
+electron/tracker/*.exe
