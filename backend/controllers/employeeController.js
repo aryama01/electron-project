@@ -1,50 +1,36 @@
-const User = require("../models/user");
-const {hashPassword}= require("../utils/password");
+const employeeService = require('../services/employee.service');
 
-// CREATE EMPLOYEE
 const createEmployee = async (req, res) => {
     try {
-        const {
-            firstName,
-            lastName,
-            email,
-            password,
-            team,
-            role,
-            phone,
-            department,
-            joiningDate,
-        } = req.body;
-        console.log("📌 Creating employee with data:");
+        const employee = await employeeService.createEmployee(req.body);
+        res.status(201).json({ message: "Employee created successfully", employee });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
-        // Check if employee exists
-        const existingEmployee = await User.findOne({ email });
-        if (existingEmployee) {
-            return res.status(400).json({ message: "Employee already exists" });
-        }
+const getAllEmployees = async (req, res) => {
+    try {
+        const employees = await employeeService.getAllEmployees();
+        res.status(200).json({ count: employees.length, employees });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
-        // Hash password
+const updateEmployee = async (req, res) => {
+    try {
+        const employee = await employeeService.updateEmployee(req.params.id, req.body);
+        res.status(200).json({ message: "Employee updated successfully", employee });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
-        const hashedPassword = await hashPassword(password);
-        console.log("🔒 Password hashed successfully");
-
-        const employee = await User.create({
-            firstName,
-            lastName,
-            email,
-            password: hashedPassword,
-            team,
-            role,
-            phone,
-            department,
-            joiningDate,
-        });
-        console.log("✅ Employee created:", employee);
-
-        res.status(201).json({
-            message: "Employee created successfully",
-            employee,
-        });
+const deleteEmployee = async (req, res) => {
+    try {
+        await employeeService.deleteEmployee(req.params.id);
+        res.status(200).json({ message: "Employee deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -52,4 +38,7 @@ const createEmployee = async (req, res) => {
 
 module.exports = {
     createEmployee,
+    getAllEmployees,
+    updateEmployee,
+    deleteEmployee,
 };
